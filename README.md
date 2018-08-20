@@ -3,6 +3,7 @@
 A simple [React-Native](https://facebook.github.io/react-native/) IOS app written in [Clojurescript](https://github.com/clojure/clojurescript) using [re-natal](https://github.com/drapanjanas/re-natal) template.
 
 Notable libraries used:
+* [firebase](https://firebase.google.com/)
 * [cljs-react-navigation](https://github.com/seantempesta/cljs-react-navigation)
 * [re-frame](https://github.com/Day8/re-frame)
 * [reagent](https://github.com/reagent-project/reagent)
