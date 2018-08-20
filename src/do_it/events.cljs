@@ -1,6 +1,6 @@
 (ns do-it.events
   (:require
-   [re-frame.core :refer [reg-event-db after]]
+   [re-frame.core :refer [reg-event-db reg-event-fx after]]
    [clojure.spec.alpha :as s]
    [do-it.db :as db :refer [app-db]]))
 
@@ -28,8 +28,54 @@
  (fn [_ _]
    app-db))
 
-(reg-event-db
- :set-greeting
+(defn- login-screen [db]
+  (assoc db :routing (clj->js {:index  0
+                               :routes [{:index 0
+                                         :routes [{:key "login"
+                                                   :routeName "login"}]
+                                         :key       "LoginStack"
+                                         :routeName "LoginStack"}]})))
+
+(reg-event-fx
+ :reset-routing-state
  validate-spec
- (fn [db [_ value]]
-   (assoc db :greeting value)))
+ (fn [cofx _]
+   {:db (login-screen (:db cofx))
+    :firebase/auth-user {}}))
+
+(reg-event-db
+ :login-field-update
+ validate-spec
+ (fn [db [_ prop value]]
+   (assoc-in db [:auth prop] value)))
+
+(reg-event-fx
+ :login-user
+ (fn [cofx _]
+   (let [db (:db cofx)
+         {:keys [email password]} (:auth db)]
+     {:db (assoc-in db [:auth :error] "")
+      :firebase/login-user {:email email
+                            :password password}})))
+
+(reg-event-db
+ :login-user-success
+ validate-spec
+ (fn [db [_ uid]]
+   (-> (merge db app-db)
+       (assoc-in [:auth :user] uid))))
+
+(reg-event-db
+ :login-user-fail
+ validate-spec
+ (fn [db [_]]
+   (-> db
+       (assoc-in [:auth :password] "")
+       (assoc-in [:auth :user] nil)
+       (assoc-in [:auth :error] "Authentication Failed!"))))
+
+(reg-event-db
+ :login-screen
+ validate-spec
+ (fn [db [_]]
+   (login-screen db)))

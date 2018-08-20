@@ -1,33 +1,19 @@
 (ns do-it.ios.core
-  (:require [reagent.core :as r :refer [atom]]
-            [re-frame.core :refer [subscribe dispatch dispatch-sync]]
+  (:require [reagent.core :as r]
+            [re-frame.core :refer [dispatch-sync]]
             [do-it.events]
-            [do-it.subs]))
+            [do-it.subs]
+            [do-it.routing :as routing]
+            [do-it.firebase :as firebase]))
 
 (def ReactNative (js/require "react-native"))
-
 (def app-registry (.-AppRegistry ReactNative))
-(def text (r/adapt-react-class (.-Text ReactNative)))
-(def view (r/adapt-react-class (.-View ReactNative)))
-(def image (r/adapt-react-class (.-Image ReactNative)))
-(def touchable-highlight (r/adapt-react-class (.-TouchableHighlight ReactNative)))
+(def yellow-box (.-YellowBox ReactNative))
 
-(def logo-img (js/require "./images/cljs.png"))
-
-(defn alert [title]
-      (.alert (.-Alert ReactNative) title))
-
-(defn app-root []
-  (let [greeting (subscribe [:get-greeting])]
-    (fn []
-      [view {:style {:flex-direction "column" :margin 40 :align-items "center"}}
-       [text {:style {:font-size 30 :font-weight "100" :margin-bottom 20 :text-align "center"}} @greeting]
-       [image {:source logo-img
-               :style  {:width 80 :height 80 :margin-bottom 30}}]
-       [touchable-highlight {:style {:background-color "#999" :padding 10 :border-radius 5}
-                             :on-press #(alert "HELLO!")}
-        [text {:style {:color "white" :text-align "center" :font-weight "bold"}} "press me"]]])))
+(def app-root routing/app-root)
 
 (defn init []
-      (dispatch-sync [:initialize-db])
-      (.registerComponent app-registry "DoIt" #(r/reactify-component app-root)))
+  (.ignoreWarnings yellow-box (clj->js ["Warning: isMounted(...) is deprecated"]))
+  (dispatch-sync [:initialize-db])
+  (firebase/init)
+  (.registerComponent app-registry "DoIt" #(r/reactify-component app-root)))

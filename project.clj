@@ -6,10 +6,12 @@
             :dependencies [[org.clojure/clojure "1.9.0"]
                            [org.clojure/clojurescript "1.10.339"]
                            [cljs-react-navigation "0.1.3"]
-                           [reagent "0.7.0" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server cljsjs/create-react-class]]
-[re-frame "0.10.4"]]
+                           [reagent "0.8.1" :exclusions [cljsjs/react cljsjs/react-dom cljsjs/react-dom-server cljsjs/create-react-class]]
+                           [re-frame "0.10.5"]
+                           [environ "1.1.0"]]
             :plugins [[lein-cljsbuild "1.1.4"]
-                      [lein-figwheel "0.5.14"]]
+                      [lein-figwheel "0.5.14"]
+                      [lein-environ "1.1.0"]]
             :clean-targets ["target/" "index.ios.js" "index.android.js" #_($PLATFORM_CLEAN$)]
             :aliases {"prod-build" ^{:doc "Recompile code with prod profile."}
                                    ["do" "clean"
@@ -25,17 +27,19 @@
                                                      {:id           "ios"
                                                       :source-paths ["src" "env/dev"]
                                                       :figwheel     true
-                                                      :compiler     {:output-to     "target/ios/not-used.js"
+                                                      :compiler     {:output-to     "target/ios/index.js"
                                                                      :main          "env.ios.main"
                                                                      :output-dir    "target/ios"
-                                                                     :optimizations :none}}
+                                                                     :optimizations :none
+                                                                     :target :nodejs}}
                                                      {:id           "android"
                                                       :source-paths ["src" "env/dev"]
                                                       :figwheel     true
-                                                      :compiler     {:output-to     "target/android/not-used.js"
+                                                      :compiler     {:output-to     "target/android/index.js"
                                                                      :main          "env.android.main"
                                                                      :output-dir    "target/android"
-                                                                     :optimizations :none}}
+                                                                     :optimizations :none
+                                                                     :target :nodejs}}
 #_($DEV_PROFILES$)]}
                              :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}
                        :prod {:cljsbuild {:builds [
@@ -47,6 +51,7 @@
                                                                    :static-fns    true
                                                                    :optimize-constants true
                                                                    :optimizations :simple
+                                                                   :target :nodejs
                                                                    :closure-defines {"goog.DEBUG" false}}}
                                                    {:id           "android"
                                                     :source-paths ["src" "env/prod"]
@@ -56,6 +61,7 @@
                                                                    :static-fns    true
                                                                    :optimize-constants true
                                                                    :optimizations :simple
+                                                                   :target :nodejs
                                                                    :closure-defines {"goog.DEBUG" false}}}
 #_($PROD_PROFILES$)]}}
                        :advanced {:dependencies [[react-native-externs "0.1.0"]]
@@ -68,6 +74,7 @@
                                                                    :static-fns    true
                                                                    :optimize-constants true
                                                                    :optimizations :advanced
+                                                                   :target :nodejs
                                                                    :closure-defines {"goog.DEBUG" false}}}
                                                    {:id           "android"
                                                     :source-paths ["src" "env/prod"]
@@ -77,5 +84,6 @@
                                                                    :static-fns    true
                                                                    :optimize-constants true
                                                                    :optimizations :advanced
+                                                                   :target :nodejs
                                                                    :closure-defines {"goog.DEBUG" false}}}
 #_($ADVANCED_PROFILES$)]}}})

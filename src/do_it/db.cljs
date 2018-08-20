@@ -2,9 +2,17 @@
   (:require [clojure.spec.alpha :as s]))
 
 ;; spec of app-db
-(s/def ::greeting string?)
+(s/def ::email string?)
+(s/def ::password string?)
+(s/def ::error string?)
+(s/def ::auth
+  (s/keys :req-un [::email ::password ::error]))
+
 (s/def ::app-db
-  (s/keys :req-un [::greeting]))
+  (s/keys :req-un [::auth]))
 
 ;; initial state of app-db
-(def app-db {:greeting "Hello Clojure in iOS and Android!"})
+(def app-db {:auth {:email ""
+                    :password ""
+                    :error ""
+                    :user nil}})
