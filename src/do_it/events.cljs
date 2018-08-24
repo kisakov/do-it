@@ -55,7 +55,9 @@
  (fn [cofx _]
    (let [db (:db cofx)
          {:keys [email password]} (:auth db)]
-     {:db (assoc-in db [:auth :error] "")
+     {:db (-> db
+              (assoc-in [:auth :error] "")
+              (assoc-in [:auth :loading] true))
       :firebase/login-user {:email email
                             :password password}})))
 
@@ -64,7 +66,8 @@
  validate-spec
  (fn [db [_ uid]]
    (-> (merge db app-db)
-       (assoc-in [:auth :user-uid] uid))))
+       (assoc-in [:auth :user-uid] uid)
+       (assoc-in [:auth :loading] false))))
 
 (reg-event-db
  :login-user-fail
@@ -73,6 +76,7 @@
    (-> db
        (assoc-in [:auth :password] "")
        (assoc-in [:auth :user-uid] "")
+       (assoc-in [:auth :loading] false)
        (assoc-in [:auth :error] (str "Authentication Failed!\n" message)))))
 
 (reg-event-db

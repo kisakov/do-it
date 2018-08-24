@@ -7,6 +7,7 @@
 (def view (r/adapt-react-class (.-View ReactNative)))
 (def touchable-opacity (r/adapt-react-class (.-TouchableOpacity ReactNative)))
 (def modal (r/adapt-react-class (.-Modal ReactNative)))
+(def activity-indicator (r/adapt-react-class (.-ActivityIndicator ReactNative)))
 
 (defn header [header-text]
   (let [view-style {:background-color "#F8F8F8"
@@ -121,3 +122,12 @@
       [card-section
        [button on-accept "Yes"]
        [button on-decline "No"]]]]))
+
+(defn spinner
+  ([] (spinner "large"))
+  ([size]
+   (let [style {:flex 1
+                :justify-content "center"
+                :align-items "center"}]
+     [view {:style style}
+      [activity-indicator {:size size}]])))
