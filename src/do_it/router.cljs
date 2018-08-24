@@ -1,4 +1,5 @@
 (ns do-it.router
+  "Fix error in library"
   (:require [cljs-react-navigation.base :as base]
             [cljs-react-navigation.re-frame :refer [init-state nil-fn ref-getStateForAction] :as nav]
             [re-frame.core :refer [dispatch subscribe]]))

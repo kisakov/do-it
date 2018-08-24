@@ -14,7 +14,7 @@
 (defn- create-user [email password]
   (fn [] (-> (firebase.auth)
              (.createUserWithEmailAndPassword email password)
-             (.catch #(dispatch [:login-user-fail])))))
+             (.catch #(dispatch [:login-user-fail %])))))
 
 (reg-fx
  :firebase/auth-user
@@ -44,24 +44,24 @@
 
 (reg-fx
  :firebase/push
- (fn [{:keys [reference value]}]
+ (fn [{:keys [reference value on-success]}]
    (-> (firebase.database)
        (.ref reference)
        (.push (prepare-value value))
-       (.then (dispatch [:employee-create-success])))))
+       (.then on-success))))
 
 (reg-fx
  :firebase/set
- (fn [{:keys [reference value]}]
+ (fn [{:keys [reference value on-success]}]
    (-> (firebase.database)
        (.ref reference)
        (.set (prepare-value value))
-       (.then (dispatch [:employee-create-success])))))
+       (.then on-success))))
 
 (reg-fx
  :firebase/remove
- (fn [{:keys [reference value]}]
+ (fn [{:keys [reference value on-success]}]
    (-> (firebase.database)
        (.ref reference)
        (.remove)
-       (.then (dispatch [:employee-create-success])))))
+       (.then on-success))))

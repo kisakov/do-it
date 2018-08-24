@@ -5,8 +5,9 @@
 (s/def ::email string?)
 (s/def ::password string?)
 (s/def ::error string?)
+(s/def ::user-uid string?)
 (s/def ::auth
-  (s/keys :req-un [::email ::password ::error]))
+  (s/keys :req-un [::email ::password ::error ::user-uid]))
 
 (s/def ::app-db
   (s/keys :req-un [::auth]))
@@ -15,4 +16,4 @@
 (def app-db {:auth {:email ""
                     :password ""
                     :error ""
-                    :user nil}})
+                    :user-uid ""}})

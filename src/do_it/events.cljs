@@ -30,9 +30,9 @@
 
 (defn- login-screen [db]
   (assoc db :routing (clj->js {:index  0
-                               :routes [{:index 0
-                                         :routes [{:key "login"
-                                                   :routeName "login"}]
+                               :routes [{:index     0
+                                         :routes    [{:key       "login"
+                                                      :routeName "login"}]
                                          :key       "LoginStack"
                                          :routeName "LoginStack"}]})))
 
@@ -51,6 +51,7 @@
 
 (reg-event-fx
  :login-user
+ validate-spec
  (fn [cofx _]
    (let [db (:db cofx)
          {:keys [email password]} (:auth db)]
@@ -63,16 +64,16 @@
  validate-spec
  (fn [db [_ uid]]
    (-> (merge db app-db)
-       (assoc-in [:auth :user] uid))))
+       (assoc-in [:auth :user-uid] uid))))
 
 (reg-event-db
  :login-user-fail
  validate-spec
- (fn [db [_]]
+ (fn [db [_ message]]
    (-> db
        (assoc-in [:auth :password] "")
-       (assoc-in [:auth :user] nil)
-       (assoc-in [:auth :error] "Authentication Failed!"))))
+       (assoc-in [:auth :user-uid] "")
+       (assoc-in [:auth :error] (str "Authentication Failed!\n" message)))))
 
 (reg-event-db
  :login-screen

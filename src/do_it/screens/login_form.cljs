@@ -7,8 +7,10 @@
 (def text (r/adapt-react-class (.-Text ReactNative)))
 
 (def error-style
-  {:font-size 20
-   :align-self "center"
+  {:font-size 18
+   :padding-top 10
+   :padding-bottom 10
+   :padding-left 20
    :color "red"})
 
 (defn login-form []
