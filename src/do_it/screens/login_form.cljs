@@ -32,7 +32,7 @@
                 :value password}]]
        (when-not (clojure.string/blank? @error)
          [text {:style error-style} @error])
-       [text @uid]
+       [text (str "user-uid: " @uid)]
        [card-section
         (if @loading
           [spinner]

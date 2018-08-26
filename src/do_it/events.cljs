@@ -66,6 +66,7 @@
  validate-spec
  (fn [db [_ uid]]
    (-> (merge db app-db)
+       login-screen
        (assoc-in [:auth :user-uid] uid)
        (assoc-in [:auth :loading] false))))
 
